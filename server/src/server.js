@@ -4,6 +4,7 @@ import testRoutes from "./routes/test.routes.js"
 import userRoutes from "./routes/user.routes.js"
 import authRoutes from "./routes/auth.routes.js"
 import applicationRoutes from "./routes/application.routes.js"
+import dashboardRoutes from "./routes/dashboard.routes.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use("/api", testRoutes);
 app.use("/api", userRoutes);
 app.use("/api", authRoutes);
 app.use("/api", applicationRoutes);
+app.use("/api", dashboardRoutes);
 
 const PORT = 5000;
 
