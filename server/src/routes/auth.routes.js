@@ -1,6 +1,7 @@
 import express from "express";
 import prisma from "../lib/prisma.js"
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -33,8 +34,15 @@ router.post("/login", async (req, res) => {
         });
     }
 
+    const token = jwt.sign(
+        { userId: user.id },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d"},
+    );
+
     return res.json({
         message: "Login successful!",
+        token: token,
         user: {
             id: user.id,
             name: user.name,
