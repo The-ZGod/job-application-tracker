@@ -7,6 +7,20 @@ const router = express.Router();
 router.post("/applications", authMiddleware, async (req, res) => {
     const { company, position, status, appliedDate, jobUrl, notes } = req.body;
 
+    const validStatuses = [
+        "APPLIED",
+        "INTERVIEW",
+        "OFFER",
+        "REJECTED",
+        "WITHDRAWN",
+    ];
+
+    if(status && !validStatuses.includes(status)){
+        res.status(400).json({
+            message: "Invalid application status"
+        });
+    }
+
     if (!company || !position) {
         return res.status(400).json({
             message: "Company and position are required",
@@ -36,10 +50,30 @@ router.post("/applications", authMiddleware, async (req, res) => {
 
 
 router.get("/applications", authMiddleware, async (req, res) => {
+
+    const { status, search } = req.query;
+
     try {
         const applications = await prisma.jobApplication.findMany({
             where: {
                 userId: req.userId,
+                // for filtering based on status
+                ...(status && { status }),
+                //for finrding based on search or by keyword
+                ...(search && {
+                    OR: [
+                        {
+                            company: {
+                                contains: search,
+                            },
+                        },
+                        {
+                            position: {
+                                contains: search,
+                            },
+                        },
+                    ],
+                }),
             },
         });
 
@@ -55,6 +89,20 @@ router.put("/applications/:id", authMiddleware, async (req, res) => {
     const applicationId = Number(req.params.id);
 
     const { company, position, status, appliedDate, jobUrl, notes } = req.body;
+
+    const validStatuses = [
+        "APPLIED",
+        "INTERVIEW",
+        "OFFER",
+        "REJECTED",
+        "WITHDRAWN",
+    ];
+
+    if (status && !validStatuses.includes(status)) {
+        return res.status(400).json({
+            message: "Invalid application status",
+        });
+    }
 
     try {
         const application = await prisma.jobApplication.updateMany({
