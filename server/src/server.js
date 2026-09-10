@@ -3,6 +3,7 @@ import cors from "cors";
 import testRoutes from "./routes/test.routes.js"
 import userRoutes from "./routes/user.routes.js"
 import authRoutes from "./routes/auth.routes.js"
+import applicationRoutes from "./routes/application.routes.js"
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api", testRoutes);
 app.use("/api", userRoutes);
 app.use("/api", authRoutes);
+app.use("/api", applicationRoutes);
 
 const PORT = 5000;
 
