@@ -26,6 +26,26 @@ router.get("/users", async (req, res) => {
 router.post("/users", async (req, res) => {
     const { name, email, password } = req.body;
 
+    if( !name || !email || !password ){
+        return res.status(400).json({
+            message: "name, email and passwords are required!",
+        });
+    }
+
+    if(password.length < 6){
+        return res.status(400).json({
+            message: "Password must be atleast 6 characters!",
+        });
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!emailPattern.test(email)){
+        return res.status(400).json({
+            message: "Please Enter Valid Email!",
+        });
+    }
+
     try{
         //Hashing using bcrypt
         //10 is bcrypt salt more salt, more strong password
