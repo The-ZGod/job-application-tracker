@@ -51,4 +51,68 @@ router.get("/applications", authMiddleware, async (req, res) => {
     }
 });
 
+router.put("/applications/:id", authMiddleware, async (req, res) => {
+    const applicationId = Number(req.params.id);
+
+    const { company, position, status, appliedDate, jobUrl, notes } = req.body;
+
+    try {
+        const application = await prisma.jobApplication.updateMany({
+            where: {
+                id: applicationId,
+                userId: req.userId,
+            },
+            data: {
+                company,
+                position,
+                status,
+                appliedDate: appliedDate ? new Date(appliedDate) : undefined,
+                jobUrl,
+                notes,
+            },
+        });
+
+        if (application.count === 0) {
+            return res.status(404).json({
+                message: "Application not found",
+            });
+        }
+
+        res.json({
+            message: "Application updated successfully",
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to update job application",
+        });
+    }
+});
+
+router.delete("/applications/:id", authMiddleware, async (req, res) => {
+    const applicationId = Number(req.params.id);
+
+    try {
+        const application = await prisma.jobApplication.deleteMany({
+            where: {
+                id: applicationId,
+                userId: req.userId,
+            },
+        });
+
+        if (application.count === 0) {
+            return res.status(404).json({
+                message: "Application not found",
+            });
+        }
+
+        res.json({
+            message: "Application deleted successfully",
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to delete job application",
+        });
+    }
+});
+
 export default router;
