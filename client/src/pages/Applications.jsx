@@ -9,6 +9,12 @@ function Applications() {
     const [jobUrl, setJobUrl] = useState('')
     const [notes, setNotes] = useState('')
     const [message, setMessage] = useState('')
+    const [editingId, setEditingId] = useState(null)
+    const [editCompany, setEditCompany] = useState('')
+    const [editPosition, setEditPosition] = useState('')
+    const [editStatus, setEditStatus] = useState('')
+    const [editJobUrl, setEditJobUrl] = useState('')
+    const [editNotes, setEditNotes] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -89,6 +95,46 @@ function Applications() {
         )
     }
 
+    const handleEdit = async (id) => {
+        const token = localStorage.getItem('token')
+
+        const response = await fetch(`http://localhost:5000/api/applications/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                company: editCompany,
+                position: editPosition,
+                status: editStatus,
+                jobUrl: editJobUrl,
+                notes: editNotes,
+            }),
+        })
+
+        const data = await response.json()
+
+        setApplications((currentApplications) =>
+            currentApplications.map((application) =>
+                application.id === id
+                    ? {
+                        ...application,
+                        company: editCompany,
+                        position: editPosition,
+                        status: editStatus,
+                        jobUrl: editJobUrl,
+                        notes: editNotes,
+                    }
+                    : application
+            )
+        )
+
+        setEditingId(null)
+        setEditJobUrl('')
+        setEditNotes('')
+    }
+
     return (
         <div>
             <h1>Job Applications</h1>
@@ -164,6 +210,73 @@ function Applications() {
                     <button onClick={() => handleDelete(application.id)}>
                         Delete
                     </button>
+
+                    <button
+                        onClick={() => {
+                            setEditingId(application.id)
+                            setEditCompany(application.company)
+                            setEditPosition(application.position)
+                            setEditStatus(application.status)
+                            setEditJobUrl(application.jobUrl || '')
+                            setEditNotes(application.notes || '')
+                        }}
+                    >
+                        Edit
+                    </button>
+
+                    {editingId === application.id && (
+                        <div>
+                            <input
+                                type="text"
+                                value={editCompany}
+                                onChange={(e) => setEditCompany(e.target.value)}
+                            />
+
+                            <input
+                                type="text"
+                                value={editPosition}
+                                onChange={(e) => setEditPosition(e.target.value)}
+                            />
+
+                            <select
+                                value={editStatus}
+                                onChange={(e) => setEditStatus(e.target.value)}
+                            >
+                                <option value="APPLIED">Applied</option>
+                                <option value="INTERVIEW">Interview</option>
+                                <option value="OFFER">Offer</option>
+                                <option value="REJECTED">Rejected</option>
+                                <option value="WITHDRAWN">Withdrawn</option>
+                            </select>
+
+                            <input
+                                type="url"
+                                value={editJobUrl}
+                                onChange={(e) => setEditJobUrl(e.target.value)}
+                                placeholder="Job URL"
+                            />
+
+                            <textarea
+                                value={editNotes}
+                                onChange={(e) => setEditNotes(e.target.value)}
+                                placeholder="Notes"
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => handleEdit(application.id)}
+                            >
+                                Save
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setEditingId(null)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    )}
 
                     <hr/>
 
