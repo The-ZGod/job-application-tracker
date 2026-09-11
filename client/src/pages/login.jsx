@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function Login() {
+function Login({ setToken }) {
     
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -28,6 +28,7 @@ function Login() {
         }
 
         localStorage.setItem('token', data.token)
+        setToken(data.token)
 
         setMessage('Login successful!')
     }
