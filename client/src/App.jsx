@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
+import { Routes, Route } from 'react-router-dom'
+import Register from './pages/Register'
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    fetch("http://localhost:5000/api/test")
-      .then((response) => response.json())
-      .then((data) => {
-        setMessage(data.message);
-      });
-  }, []);
-
   return (
-    <div>
-      <h1>Job Application Tracker</h1>
-      <p>{message}</p>
-    </div>
-  );
+    <Routes>
+      <Route path="/register" element={<Register />} />
+    </Routes>
+  )
 }
 
-export default App;
+export default App
