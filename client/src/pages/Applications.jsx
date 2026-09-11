@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 
+import './Applications.css'
+
 function Applications() {
 
     const [applications, setApplications] = useState([])
     const [company, setCompany] = useState('')
     const [position, setPosition] = useState('')
     const [status, setStatus] = useState('APPLIED')
+    const [statusOpen, setStatusOpen] = useState(false)
     const [jobUrl, setJobUrl] = useState('')
     const [notes, setNotes] = useState('')
     const [message, setMessage] = useState('')
@@ -13,10 +16,12 @@ function Applications() {
     const [editCompany, setEditCompany] = useState('')
     const [editPosition, setEditPosition] = useState('')
     const [editStatus, setEditStatus] = useState('')
+    const [editStatusOpen, setEditStatusOpen] = useState(false)
     const [editJobUrl, setEditJobUrl] = useState('')
     const [editNotes, setEditNotes] = useState('')
     const [search, setSearch] = useState('')
     const [filterStatus, setFilterStatus] = useState('')
+    const [filterStatusOpen, setFilterStatusOpen] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -138,7 +143,7 @@ function Applications() {
     }
 
     return (
-        <div>
+        <div className="application-page">
             <h1>Job Applications</h1>
 
             <input
@@ -148,17 +153,73 @@ function Applications() {
                 onChange={(e) => setSearch(e.target.value)}
             />
 
-            <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-            >
-                <option value="">All Statuses</option>
-                <option value="APPLIED">Applied</option>
-                <option value="INTERVIEW">Interview</option>
-                <option value="OFFER">Offer</option>
-                <option value="REJECTED">Rejected</option>
-                <option value="WITHDRAWN">Withdrawn</option>
-            </select>
+            <div className="custom-select filter-select">
+                <button
+                    type="button"
+                    className="custom-select-button"
+                    onClick={() => setFilterStatusOpen(!filterStatusOpen)}
+                >
+                    {filterStatus || 'All Statuses'}
+                </button>
+
+                {filterStatusOpen && (
+                    <div className="custom-select-menu">
+                        <div
+                            onClick={() => {
+                                setFilterStatus('')
+                                setFilterStatusOpen(false)
+                            }}
+                        >
+                            All Statuses
+                        </div>
+
+                        <div
+                            onClick={() => {
+                                setFilterStatus('APPLIED')
+                                setFilterStatusOpen(false)
+                            }}
+                        >
+                            Applied
+                        </div>
+
+                        <div
+                            onClick={() => {
+                                setFilterStatus('INTERVIEW')
+                                setFilterStatusOpen(false)
+                            }}
+                        >
+                            Interview
+                        </div>
+
+                        <div
+                            onClick={() => {
+                                setFilterStatus('OFFER')
+                                setFilterStatusOpen(false)
+                            }}
+                        >
+                            Offer
+                        </div>
+
+                        <div
+                            onClick={() => {
+                                setFilterStatus('REJECTED')
+                                setFilterStatusOpen(false)
+                            }}
+                        >
+                            Rejected
+                        </div>
+
+                        <div
+                            onClick={() => {
+                                setFilterStatus('WITHDRAWN')
+                                setFilterStatusOpen(false)
+                            }}
+                        >
+                            Withdrawn
+                        </div>
+                    </div>
+                )}
+            </div>
 
             <h2>Add Job Application</h2>
 
@@ -179,16 +240,64 @@ function Applications() {
                     onChange={(e) => setPosition(e.target.value)}
                 />
 
-                <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                >
-                    <option value="APPLIED">Applied</option>
-                    <option value="INTERVIEW">Interview</option>
-                    <option value="OFFER">Offer</option>
-                    <option value="REJECTED">Rejected</option>
-                    <option value="WITHDRAWN">Withdrawn</option>
-                </select>
+                <div className="custom-select">
+                    <button
+                        type="button"
+                        className="custom-select-button"
+                        onClick={() => setStatusOpen(!statusOpen)}
+                    >
+                        {status}
+                    </button>
+
+                    {statusOpen && (
+                        <div className="custom-select-menu">
+                            <div
+                                onClick={() => {
+                                    setStatus('APPLIED')
+                                    setStatusOpen(false)
+                                }}
+                            >
+                                Applied
+                            </div>
+
+                            <div
+                                onClick={() => {
+                                    setStatus('INTERVIEW')
+                                    setStatusOpen(false)
+                                }}
+                            >
+                                Interview
+                            </div>
+
+                            <div
+                                onClick={() => {
+                                    setStatus('OFFER')
+                                    setStatusOpen(false)
+                                }}
+                            >
+                                Offer
+                            </div>
+
+                            <div
+                                onClick={() => {
+                                    setStatus('REJECTED')
+                                    setStatusOpen(false)
+                                }}
+                            >
+                                Rejected
+                            </div>
+
+                            <div
+                                onClick={() => {
+                                    setStatus('WITHDRAWN')
+                                    setStatusOpen(false)
+                                }}
+                            >
+                                Withdrawn
+                            </div>
+                        </div>
+                    )}
+                </div>
 
                 <input
                     type="url"
@@ -210,11 +319,18 @@ function Applications() {
 
             <p>Total Applications: {applications.length}</p>
             {applications.map((application) => (
-                <div key={application.id}>
+                <div
+                    key={application.id}
+                    className="application-card"
+                >
 
                     <h3>{application.company}</h3>
                     <p>{application.position}</p>
-                    <p>Status: {application.status}</p>
+                    <p>
+                        Status: <span className={`status-badge status-${application.status.toLowerCase()}`}>
+                            {application.status}
+                        </span>
+                    </p>
                     <p>Applied: {new Date(application.appliedDate).toLocaleDateString()}</p>
                     {application.jobUrl && (
                         <p>
@@ -259,16 +375,54 @@ function Applications() {
                                 onChange={(e) => setEditPosition(e.target.value)}
                             />
 
-                            <select
-                                value={editStatus}
-                                onChange={(e) => setEditStatus(e.target.value)}
-                            >
-                                <option value="APPLIED">Applied</option>
-                                <option value="INTERVIEW">Interview</option>
-                                <option value="OFFER">Offer</option>
-                                <option value="REJECTED">Rejected</option>
-                                <option value="WITHDRAWN">Withdrawn</option>
-                            </select>
+                            <div className="custom-select">
+                                <button
+                                    type="button"
+                                    className="custom-select-button"
+                                    onClick={() => setEditStatusOpen(!editStatusOpen)}
+                                >
+                                    {editStatus}
+                                </button>
+
+                                {editStatusOpen && (
+                                    <div className="custom-select-menu">
+                                        <div onClick={() => {
+                                            setEditStatus('APPLIED')
+                                            setEditStatusOpen(false)
+                                        }}>
+                                            Applied
+                                        </div>
+
+                                        <div onClick={() => {
+                                            setEditStatus('INTERVIEW')
+                                            setEditStatusOpen(false)
+                                        }}>
+                                            Interview
+                                        </div>
+
+                                        <div onClick={() => {
+                                            setEditStatus('OFFER')
+                                            setEditStatusOpen(false)
+                                        }}>
+                                            Offer
+                                        </div>
+
+                                        <div onClick={() => {
+                                            setEditStatus('REJECTED')
+                                            setEditStatusOpen(false)
+                                        }}>
+                                            Rejected
+                                        </div>
+
+                                        <div onClick={() => {
+                                            setEditStatus('WITHDRAWN')
+                                            setEditStatusOpen(false)
+                                        }}>
+                                            Withdrawn
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
                             <input
                                 type="url"
