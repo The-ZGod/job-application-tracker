@@ -15,6 +15,8 @@ function Applications() {
     const [editStatus, setEditStatus] = useState('')
     const [editJobUrl, setEditJobUrl] = useState('')
     const [editNotes, setEditNotes] = useState('')
+    const [search, setSearch] = useState('')
+    const [filterStatus, setFilterStatus] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -63,7 +65,7 @@ function Applications() {
         const fetchApplications = async () => {
             const token = localStorage.getItem('token')
 
-            const response = await fetch('http://localhost:5000/api/applications', {
+            const response = await fetch(`http://localhost:5000/api/applications?search=${encodeURIComponent(search)}&status=${filterStatus}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -75,7 +77,7 @@ function Applications() {
         }
 
         fetchApplications()
-    }, [])
+    }, [search, filterStatus])
 
 
     const handleDelete = async (id) => {
@@ -138,6 +140,25 @@ function Applications() {
     return (
         <div>
             <h1>Job Applications</h1>
+
+            <input
+                type="text"
+                placeholder="Search company or position"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+            />
+
+            <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+            >
+                <option value="">All Statuses</option>
+                <option value="APPLIED">Applied</option>
+                <option value="INTERVIEW">Interview</option>
+                <option value="OFFER">Offer</option>
+                <option value="REJECTED">Rejected</option>
+                <option value="WITHDRAWN">Withdrawn</option>
+            </select>
 
             <h2>Add Job Application</h2>
 
