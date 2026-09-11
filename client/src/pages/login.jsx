@@ -27,6 +27,8 @@ function Login() {
             return
         }
 
+        localStorage.setItem('token', data.token)
+
         setMessage('Login successful!')
     }
 
