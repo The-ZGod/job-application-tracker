@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './Login.css'
 
 function Login({ setToken }) {
     
@@ -34,12 +35,12 @@ function Login({ setToken }) {
     }
 
     return (
-        <div>
-            <h1>Login</h1>
-
-            {message && <p>{message}</p>}
-
+        <div className="auth-page">
+            
             <form onSubmit={handleSubmit}>
+                <h1>Login</h1>
+                {message && <p>{message}</p>}
+                
                 <input
                     type="email"
                     placeholder="Email"
@@ -57,6 +58,10 @@ function Login({ setToken }) {
                 <button type="submit">
                     Login
                 </button>
+
+                <p className="auth-switch">
+                    Don't have an account? <a href="/register">Register</a>
+                </p>
             </form>
         </div>
     )
