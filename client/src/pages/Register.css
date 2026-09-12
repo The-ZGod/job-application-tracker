@@ -24,9 +24,13 @@
 }
 
 .auth-page h1 {
+    margin-top: 0;
     margin-bottom: 24px;
+
+    padding-bottom: 6px;
+
     font-size: clamp(2.2rem, 7vw, 3.5rem);
-    line-height: 1.2;
+    line-height: 1.25;
     text-align: center;
 
     background: linear-gradient(90deg, #fff, #a5b4fc);
@@ -65,12 +69,13 @@
     box-shadow: 0 0 18px rgba(165, 180, 252, 0.12);
 }
 
-.auth-page input::placeholder {
-    color: rgba(255, 255, 255, 0.45);
-}
+.auth-page label {
+    display: block;
+    margin-bottom: 6px;
 
-.auth-page input {
-    color-scheme: dark;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .auth-page button {
@@ -99,20 +104,46 @@
     transform: translateY(-2px);
 }
 
-.auth-page label {
-    display: block;
-    margin-bottom: 6px;
-
+.auth-switch {
+    margin: 18px 0 0;
+    text-align: center;
     font-size: 14px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.55);
 }
 
-.auth-page form h1 {
-    margin-top: 0;
-    padding-bottom: 6px;
-    line-height: 1.25;
-    overflow: visible;
+.auth-switch a {
+    color: #a5b4fc;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.auth-switch a:hover {
+    color: #fff;
+}
+
+.auth-page form {
+    animation: authEnter 0.5s ease both;
+}
+
+@keyframes authEnter {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-page input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.auth-page input {
+    color-scheme: dark;
 }
 
 .auth-message {
@@ -145,6 +176,7 @@
 
 
 
+
 /* bottom */
 @media (max-width: 500px) {
     .auth-page {
@@ -155,4 +187,3 @@
         padding: 24px;
     }
 }
-

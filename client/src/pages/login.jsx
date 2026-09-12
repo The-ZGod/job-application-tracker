@@ -39,7 +39,11 @@ function Login({ setToken }) {
             
             <form onSubmit={handleSubmit}>
                 <h1>Login</h1>
-                {message && <p>{message}</p>}
+                {message && (
+                    <p className={`auth-message ${message === 'Login successful!' ? 'success' : ''}`}>
+                        {message}
+                    </p>
+                )}                      
                 
                 <input
                     type="email"

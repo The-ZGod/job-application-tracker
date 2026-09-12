@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './Register.css'
 
 function Register() {
 
@@ -33,12 +34,17 @@ function Register() {
     }
 
     return (
-        <div>
-            <h1>Create Account</h1>
-
-            {message && <p>{message}</p>}
+        <div className="auth-page">
+            
 
             <form onSubmit={handleSubmit}>
+                <h1>Create Account</h1>
+                {message && (
+                    <p className={`auth-message ${message === 'Registration successful!' ? 'success' : ''}`}>
+                        {message}
+                    </p>
+                )}
+
                 <input
                     type="text"
                     placeholder="Name"
@@ -63,6 +69,11 @@ function Register() {
                 <button type="submit">
                     Register
                 </button>
+
+                <p className="auth-switch">
+                    Already have an account? <a href="/login">Login</a>
+                </p>
+
             </form>
         </div>
     )
